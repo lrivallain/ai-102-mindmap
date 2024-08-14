@@ -1,0 +1,34 @@
+name: Deploy HTML on GH pages
+
+on:
+  - push
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Setup markmap
+        run: |
+          npm install -g markmap-cli
+      - name: Build HTML
+        run: |
+          mkdir -p ./build
+          cp ./favicon.png ./build
+          markmap -o ./build/index.html README.md
+      - name: Customize HTML
+        run: |
+          # Replace title
+          sed -i 's/<title>.*<\/title>/<title>AI-102 Mindmap<\/title>/' ./build/index.html
+          # Insert PNG favicon in head
+          sed -i '/<head>/a <link rel="icon" type="image/png" href="favicon.png">' ./build/index.html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_branch: gh-pages
+          publish_dir: ./build
