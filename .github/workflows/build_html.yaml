@@ -3,6 +3,9 @@ name: Deploy HTML on GH pages
 on:
   - push
 
+env:
+  MAP_TITLE: AI-102 Mindmap
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,7 +40,7 @@ jobs:
       - name: Customize HTML
         run: |
           # Replace title
-          sed -i 's/<title>.*<\/title>/<title>AI-102 Mindmap<\/title>/' ./build/index.html
+          sed -i 's/<title>.*<\/title>/<title>{{ env.MAP_TITLE }}<\/title>/' ./build/index.html
           # Insert PNG favicon in head
           sed -i '/<head>/a <link rel="icon" type="image/png" href="favicon.png">' ./build/index.html
       - name: Save artifacts
