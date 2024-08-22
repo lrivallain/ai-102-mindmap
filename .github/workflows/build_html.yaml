@@ -26,6 +26,7 @@ jobs:
           name: html
           path: ./build
   customize:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
@@ -45,6 +46,7 @@ jobs:
           name: html-customized
           path: ./build
   deploy:
+    needs: customize
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
