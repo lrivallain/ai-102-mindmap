@@ -20,6 +20,10 @@ markmap:
 
 ### Select the appropriate Azure AI service
 
+#### List of Azure AI Services
+
+* ![List of Azure AI Services](./static/images/List_of_AzureAIServices.png)
+
 #### Select the appropriate service for a computer vision solution
 
 ##### Azure AI Vision
@@ -92,13 +96,21 @@ markmap:
 
 #### Select the appropriate service for a generative AI solution
 
-* ==TODO==
+* Build your own copilot and generative AI applications with:
+  * Azure OpenAI Service
+  * Azure AI Studio
+    * Provides a low-code/no-code environment for building AI tools based on various AI models:
+      * Open AI (DALL-E, GPT, Wisper...)
+      * Mistral AI
+      * Meta (Llama)
+      * Cohere (Command R, Rerank...)
 
 #### Select the appropriate service for a document intelligence solution
 
-* Document analysis model
-* Prebuilt model
-* Custom model
+* Azure AI Document Intelligence:
+  * Document analysis model
+  * Prebuilt model
+  * Custom model
 
 #### Select the appropriate service for a knowledge mining solution
 
@@ -186,21 +198,46 @@ markmap:
 
 #### Manage account keys
 
-* ==TODO==
+Users with `Cognitive Services Contributor` RBAC role can View/Copy/Regenerate keys under 
+  "Keys and Endpoint".
 
 #### Protect account keys by using Azure Key Vault
 
-* ==TODO==
+* You can use Azure Key Vault to securely develop Azure AI services applications.
+* Key Vault enables you to store your authentication credentials in the cloud, and reduces the 
+  chances that secrets may be accidentally leaked, because you won't store security information 
+  in your application.
+  1. Navigate to your Azure resource in the Azure portal
+  2. From the collapsible menu on the left, select `Keys` and `Endpoint`
+  3. In Azure Key Vault, select `Objects` > `Secrets`
+  4. Select `Generate/Import`
+  5. Enter a *name* for the secret and the *value* you want to store
 
 #### Manage authentication for an Azure AI Service resource
 
-* ==TODO==
+* Each request to an Azure AI service must include an authentication header. 
+  * Authenticate with a single-service or multi-service resource key
+  * Authenticate with a token
+  * Authenticate with Microsoft Entra ID
+    * This scenario provides Azure RBAC integration with Azure AI services.
 
 #### Manage private communications
 
-* ==TODO==
+* To secure your Azure AI services resource, you should first configure a rule to deny access to 
+  traffic from all networks, including internet traffic, by default. Then, configure rules that
+  grant access to traffic from specific virtual networks.
+  1. Go to the **Azure AI services** resource you want to secure
+  2. Select **Networking**
+  3. To deny access by default, under **Firewalls** and **virtual networks**, 
+    select **Selected Networks and Private Endpoints**.
 
-## Implement content moderation solutions (10–15%)
+* To grant access to a virtual network with an existing network rule:
+  1. Go to the **Azure AI services **resource you want to secure.
+  2. Select **Networking**
+  3. Under **Allow access from**, select **Add existing virtual network**.
+  4. Select the Virtual networks and Subnets options, and then select **Enable**.
+    * > If a service endpoint for Azure AI services wasn't previously configured for the selected virtual network and subnets, you can configure it as part of this operation.
+  5. Select **Save** to apply your changes.
 
 ### Create solutions for content delivery
 
@@ -211,9 +248,8 @@ markmap:
   1. Get an API endpoint + subscription key
   2. Send a request to the endpoint with the subscription key and the text to analyze
   3. Get a response with the classification of the text as JSON
-
-  * Harm categories (e.g. hate and fairness, sexual, violence, self-harm)
-  * Severity level from 0 to 7 (e.g. safe, low, medium, high)
+    * Harm categories (e.g. hate and fairness, sexual, violence, self-harm)
+    * Severity level from 0 to 7 (e.g. safe, low, medium, high)
 
 #### Implement an image moderation solution with Azure AI Content Safety
 
@@ -222,9 +258,8 @@ markmap:
   1. Get an API endpoint + subscription key
   2. Send a request to the endpoint with the subscription key and the image to analyze
   3. Get a response with the classification of the image as JSON
-
-  * Harm categories (e.g. hate and fairness, sexual, violence, self-harm)
-  * Severity level from 0 to 7 (e.g. safe, low, medium, high)
+    * Harm categories (e.g. hate and fairness, sexual, violence, self-harm)
+    * Severity level from 0 to 7 (e.g. safe, low, medium, high)
 
 ## Implement computer vision solutions (15–20%)
 
@@ -236,15 +271,23 @@ markmap:
 
 #### Detect objects in images and generate image tags
 
-TODO:
+1. Create a new Custom Vision project
+2. Select Type Object Detection
+3. Select an available domain (General, Food, Landmarks, Retail, Logo etc.)
+4. Train and test the model
+5. Publish and consume the model
 
 #### Include image analysis features in an image processing request
 
-TODO:
+* ==TODO==
 
 #### Interpret image processing responses
 
-* ==TODO==
+* The service returns results in the form of an [`ImagePrediction`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.cognitiveservices.vision.customvision.prediction.models.imageprediction?view=azure-dotnet) object. 
+  The [`Predictions`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.cognitiveservices.vision.customvision.prediction.models.imageprediction.predictions?view=azure-dotnet#microsoft-azure-cognitiveservices-vision-customvision-prediction-models-imageprediction-predictions) property contains a list of [`PredictionModel`](https://learn.microsoft.com/en-us/dotnet/api/microsoft.azure.cognitiveservices.vision.customvision.prediction.models.predictionmodel?view=azure-dotnet) objects, which each represents a 
+  single object prediction. They include the **name** of the **label** and the bounding box 
+  coordinates where the object was detected in the image. Your app can then parse this data to,
+  for example, display the image with labeled object fields on a screen.
 
 #### Extract text from images using Azure AI Vision
 
@@ -262,7 +305,7 @@ TODO:
 
 #### Convert handwritten text using Azure AI Vision
 
-* ==TODO==
+* Microsoft's Read OCR engine can extract printed and handwritten text including mixed languages and writing styles.
 
 ### Implement custom computer vision models by using Azure AI Vision
 
@@ -815,11 +858,27 @@ Taking a written or spoken input and determining the intent behind it.
 
 #### Create a composed document intelligence model
 
-* ==TODO==
+* Composed models in Azure AI Document Intelligence enable users to submit a form when 
+  they don't know which is the best model to use.
+  * Once you've created a set of custom models, you must assemble them into a composed model. 
+      * You can do this in a GUI by using Azure AI Document Intelligence Studio, 
+      * or by using the `StartCreateComposedModelAsync()` method in custom code.
+  * Creation parameters:
+    * **Model IDs**: The IDs of the custom models that you want to include in the composed model.
+    * **Model Name**: The name of the composed model.
+  * GUI provides a method to create composed models by selecting the models to include.
 
 #### Implement a document intelligence model as a custom Azure AI Search skill
 
-* ==TODO==
+* Once your document intelligence model is ready, you can integrate it as a custom skill in 
+  Azure AI Search.
+  * Enrich your index with fields that your Azure AI Document Intelligence models are trained 
+    to extract.
+  * To implement this:
+    1. In AI Search resource: select the *Skillsets* tab
+    2. Select *Add skillset*
+    3. Provide the Skillset definition (JSON)
+    4. Save.
 
 ## Implement generative AI solutions (10–15%)
 
@@ -889,7 +948,18 @@ Taking a written or spoken input and determining the intent behind it.
 
 #### Use Azure OpenAI APIs to submit prompts and receive responses
 
-* ==TODO==
+```
+POST https://{endpoint}/openai/deployments/{deployment-id}/completions?api-version=2024-06-01
+
+{
+ "prompt": [
+  "tell me a joke about mango"
+ ],
+ "max_tokens": 32,
+ "temperature": 1.0,
+ "n": 1
+}
+```
 
 ### Optimize generative AI
 
